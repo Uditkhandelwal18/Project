@@ -1,10 +1,14 @@
 #include<stdio.h>
+#include<pthread.h>
+#include<stdlib.h>
 #include<unistd.h>
-//global variable declaration
-int bt[20],p[20],waitingtime[20],turnaroundtime[20],count[20],at[20],no_of_process,flagat,temp,temp1,temp2,sum=0,i,j,u;
+//global declaration of all variales
+
+void *sortingat();
+int no_of_process,bt[20],p[20],waitingtime[20],i,j,u,turnaroundtime[20],count[20],at[20],flagat,temp,temp1,temp2,sum=0;
 float priority,avgwt=0,avgtt=0;
 //sorting of process with their burstime(bt) and arrivaltime(at) using arrivaltime(at)
-void sortingat()
+void *sortingat()
 {
 	for(i=1;i<no_of_process;i++)
     {
@@ -58,9 +62,10 @@ int main()
  			count[i]=0;
  			sum+=bt[i];
 		}
-	//calling sorting fncn
-	sortingat();
-	
+	//calling sorting function using thread
+	pthread_t thread;
+	pthread_create(&thread,NULL,sortingat,NULL);
+	pthread_join(thread,NULL);
 	printf("\narrival time\tBurst time\tWaiting time\tTurnaround time ");
   	for(flagat=at[0];flagat<sum;)
   		{
